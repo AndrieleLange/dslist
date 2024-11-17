@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.andriele.dslist.dto.GameDTO;
 import com.andriele.dslist.dto.GameMinDTO;
 import com.andriele.dslist.entities.Game;
+import com.andriele.dslist.projections.GameMinProjection;
 import com.andriele.dslist.repositories.GameRepository;
 
 @Service
@@ -31,6 +32,12 @@ public class GameService {
             throw new RuntimeException("Game não encontrado.");
         }
         return new GameDTO(result);
+    }
+
+    @Transactional(readOnly = true)
+    public List<GameMinDTO> findByList(Long id){
+        List<GameMinProjection> result = gameRepository.searchByList(id);
+        return result.stream().map(x -> new GameMinDTO(x)).toList();
     }
 
 }
